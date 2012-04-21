@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{{ STATIC_URL }}fancybox/jquery.fancybox.css" type="text/css" media="screen" />
+{% endblock %}
+
+{% block title %}{{ galleria }} Photo Galleria{% endblock %}
+
+{% block content %}
+<h3>{{ galleria }}</h3>
+
+{% if galleria.description %}
+<p>{{ galleria.description|safe }}</p>
+{% endif %}
+
+<div class="clearfix" id="galleria">
+    {% for photo in galleria.photos.all %}
+	<figure class="item photo">
+
+	    {% thumbnail photo.get_image_url "896" as big %}
+	        {% thumbnail photo.get_image_url "480" as small %}
+                     <a href="{{ big.url}}" class="fancybox" rel="gallery" >
+			 <img src="{{ small.url }}" alt="{{ photo }}"></a>
+	        {% endthumbnail %}
+	    {% endthumbnail %}
+
+	    {% if photo.description %}
+	    <figcaption>
+		{{ photo.description|safe }}
+	    </figcaption>
+	    {% endif %}
+	</figure>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block extra_script %}
+<script src="{{ STATIC_URL }}js/jquery.masonry.min.js"></script>
+<script>
+var $container = $('#galleria');
+$container.imagesLoaded(function(){
+  $container.masonry({
+    itemSelector : '.item',
+    isAnimated: !Modernizr.csstransitions,
+    columnWidth: function( containerWidth ) {
+        if (containerWidth <= 480) {
+           return containerWidth;
+	}
+        if (containerWidth <= 600) {
+           return containerWidth / 2;
+	}
+        if (containerWidth <= 768) {
+           return containerWidth / 3;
+	}
+	return containerWidth / 4;
+    }
+  });
+});
+</script>
+<script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.fancybox.pack.js"></script>
+<script>
+    $(document).ready(function() {
+        $('.fancybox').fancybox();
+    });
+</script>
+{% endblock %}

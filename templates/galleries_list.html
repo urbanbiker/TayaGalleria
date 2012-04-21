@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block title %}Funky media galleria: photos & videos{% endblock %}
+
+{% block content %}
+<div class="clearfix" id="galleries'">
+    {% for g in galleries %}
+    <figure class="item">
+	<a href="{{ g.get_absolute_url }}">
+	    {% thumbnail g.get_image_url "480" as small %}
+	    <img src="{{ small.url }}" title="{{ g }}"alt="{{ g }}"/>
+	    {% endthumbnail %}
+	    <figcaption>
+		<h4>{{ g }}</h4>
+		{{ g.description|safe }}
+	    </figcaption>
+	</a>
+    </figure>
+    {% endfor %}
+</div>
+{% endblock %}
+

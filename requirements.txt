@@ -1,0 +1,3 @@
+django-stringfield
+sorl-thumbnail
+django-extensions
